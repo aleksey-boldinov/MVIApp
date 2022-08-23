@@ -5,6 +5,8 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.boldinov.mviapp.base.LoadingState
 import com.boldinov.mviapp.base.RxJavaExecutor
+import com.boldinov.mviapp.counter.repository.CounterRepository
+import com.boldinov.mviapp.counter.repository.RandomCounterRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers

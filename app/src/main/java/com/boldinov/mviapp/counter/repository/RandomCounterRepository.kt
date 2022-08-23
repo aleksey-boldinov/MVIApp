@@ -1,4 +1,4 @@
-package com.boldinov.mviapp.counter
+package com.boldinov.mviapp.counter.repository
 
 import java.io.IOException
 import kotlin.random.Random

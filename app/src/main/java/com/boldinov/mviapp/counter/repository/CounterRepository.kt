@@ -1,4 +1,4 @@
-package com.boldinov.mviapp.counter
+package com.boldinov.mviapp.counter.repository
 
 import androidx.annotation.WorkerThread
 import java.io.IOException
