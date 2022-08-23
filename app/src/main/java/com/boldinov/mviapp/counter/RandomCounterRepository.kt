@@ -9,13 +9,13 @@ import kotlin.random.Random
 class RandomCounterRepository : CounterRepository {
 
     override fun getCounterLocal(): Int {
-        return Random.nextInt()
+        return Random.nextInt(10)
     }
 
     override fun getCounterRemote(): Int {
         try {
-            Thread.sleep(500)
-            return Random.nextInt()
+            Thread.sleep(1000)
+            return Random.nextInt(20)
         } catch (e: Exception) {
             throw IOException(e)
         }

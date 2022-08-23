@@ -1,4 +1,4 @@
-package com.boldinov.mviapp
+package com.boldinov.mviapp.main
 
 import com.arkivanov.mvikotlin.core.view.MviView
 

@@ -1,4 +1,4 @@
-package com.boldinov.mviapp
+package com.boldinov.mviapp.main
 
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.lifecycle.Lifecycle
@@ -12,7 +12,7 @@ import com.boldinov.mviapp.base.observableLabels
 import com.boldinov.mviapp.base.observableStates
 import com.boldinov.mviapp.counter.CounterStore
 import com.boldinov.mviapp.counter.CounterStoreFactory
-import com.boldinov.mviapp.mapper.MainViewModelMapper
+import com.boldinov.mviapp.main.mapper.MainViewModelMapper
 
 /**
  * Created by Aleksey Boldinov on 22.08.2022.

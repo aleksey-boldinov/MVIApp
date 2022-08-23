@@ -6,9 +6,9 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.boldinov.mviapp.base.LoadingState
 import com.boldinov.mviapp.base.RxJavaExecutor
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.Serializable
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by Aleksey Boldinov on 22.08.2022.
@@ -23,7 +23,7 @@ class CounterStoreFactory(
                 name = "CounterStore",
                 initialState = CounterStore.State(),
                 executorFactory = {
-                    ExecutorImpl()
+                    ExecutorImpl(RandomCounterRepository())
                 },
                 reducer = ReducerImpl()
             ) {}
@@ -36,8 +36,9 @@ class CounterStoreFactory(
         data class Error(val throwable: Throwable) : Msg
     }
 
-    private class ExecutorImpl :
-        RxJavaExecutor<CounterStore.Intent, Nothing, CounterStore.State, Msg, CounterStore.Label>() {
+    private class ExecutorImpl(
+        private val repository: CounterRepository
+    ) : RxJavaExecutor<CounterStore.Intent, Unit, CounterStore.State, Msg, CounterStore.Label>() {
 
         override fun executeIntent(
             intent: CounterStore.Intent,
@@ -48,10 +49,12 @@ class CounterStoreFactory(
                     publish(CounterStore.Label.ChangeStarted)
                     dispatch(Msg.Loading)
                     launch {
-                        Completable.timer(1000, TimeUnit.MILLISECONDS)
+                        Observable.fromCallable {
+                            repository.getCounterRemote()
+                        }.subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
-                                dispatch(Msg.Increased(1))
+                                dispatch(Msg.Increased(it))
                                 publish(CounterStore.Label.ChangeFinished)
                             }, {
                                 dispatch(Msg.Error(it))

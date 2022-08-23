@@ -1,4 +1,4 @@
-package com.boldinov.mviapp
+package com.boldinov.mviapp.main
 
 /**
  * Created by Aleksey Boldinov on 22.08.2022.
