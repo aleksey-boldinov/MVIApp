@@ -1,16 +1,23 @@
 package com.boldinov.mviapp.main
 
-import com.arkivanov.essenty.instancekeeper.InstanceKeeper
-import com.arkivanov.essenty.lifecycle.Lifecycle
+import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import com.arkivanov.essenty.instancekeeper.instanceKeeper
+import com.arkivanov.essenty.lifecycle.asEssentyLifecycle
 import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
 import com.arkivanov.mvikotlin.core.binder.attachTo
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.boldinov.mviapp.base.router.WeakLifecycleNavigator
 import com.boldinov.mviapp.base.rx.RxJavaBinder
 import com.boldinov.mviapp.base.rx.observableEvents
 import com.boldinov.mviapp.base.rx.observableLabels
 import com.boldinov.mviapp.base.rx.observableStates
-import com.boldinov.mviapp.counter.CounterRouter
+import com.boldinov.mviapp.counter.CounterRouterImpl
 import com.boldinov.mviapp.counter.CounterStore
 import com.boldinov.mviapp.counter.CounterStoreFactory
 import com.boldinov.mviapp.main.mapper.MainViewModelMapper
@@ -18,19 +25,49 @@ import com.boldinov.mviapp.main.mapper.MainViewModelMapper
 /**
  * Created by Aleksey Boldinov on 22.08.2022.
  */
-class MainController(
+class MainController private constructor(
+    private val fragment: Fragment,
+    private val viewFactory: (View) -> MainView,
     private val storeFactory: StoreFactory,
-    private val counterRouter: CounterRouter,
-    instanceKeeper: InstanceKeeper
 ) {
 
-    private val counterStore = instanceKeeper.getStore {
+    companion object {
+
+        fun attachTo(
+            fragment: Fragment,
+            viewFactory: (View) -> MainView,
+            storeFactory: StoreFactory = DefaultStoreFactory()
+        ) {
+            MainController(fragment, viewFactory, storeFactory)
+        }
+    }
+
+    private val counterRouter = CounterRouterImpl()
+    private val counterStore = fragment.instanceKeeper().getStore {
         CounterStoreFactory(
             storeFactory = storeFactory
         ).create()
     }
 
-    fun onViewCreated(view: MainView, viewLifecycle: Lifecycle) {
+    init {
+        counterRouter.attachNavigator(WeakLifecycleNavigator(fragment))
+        fragment.viewLifecycleOwnerLiveData.observeForever {
+            it?.lifecycle?.addObserver(object : LifecycleEventObserver {
+                override fun onStateChanged(
+                    source: LifecycleOwner,
+                    event: Lifecycle.Event
+                ) {
+                    if (event == Lifecycle.Event.ON_CREATE) {
+                        onViewCreated(viewFactory.invoke(fragment.requireView()), source.lifecycle)
+                    } else if (event == Lifecycle.Event.ON_DESTROY) {
+                        source.lifecycle.removeObserver(this)
+                    }
+                }
+            })
+        }
+    }
+
+    private fun onViewCreated(view: MainView, viewLifecycle: Lifecycle) {
         RxJavaBinder {
             view.observableEvents().subscribe {
                 counterStore.accept(it.toIntent())
@@ -44,7 +81,7 @@ class MainController(
                     counterRouter.shareToApps(it.counter)
                 }
             }
-        }.attachTo(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY)
+        }.attachTo(viewLifecycle.asEssentyLifecycle(), BinderLifecycleMode.CREATE_DESTROY)
     }
 
     private fun MainEvent.toIntent(): CounterStore.Intent {
@@ -54,5 +91,4 @@ class MainController(
             MainEvent.ShareClicked -> CounterStore.Intent.ShareCounter
         }
     }
-
 }
