@@ -1,7 +1,7 @@
 package com.boldinov.mviapp.counter
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.boldinov.mviapp.base.LoadingState
+import com.boldinov.mviapp.base.state.LoadingState
 import java.io.Serializable
 import com.boldinov.mviapp.counter.CounterStore.Intent
 import com.boldinov.mviapp.counter.CounterStore.State
@@ -19,6 +19,7 @@ interface CounterStore : Store<Intent, State, Label> {
     sealed class Intent : Serializable {
         object Increase : Intent()
         object Decrease : Intent()
+        object ShareCounter : Intent()
     }
 
     data class State(
@@ -29,5 +30,6 @@ interface CounterStore : Store<Intent, State, Label> {
     sealed class Label : Serializable {
         object ChangeStarted : Label()
         object ChangeFinished : Label()
+        data class ShareCounter(val counter: Int) : Label()
     }
 }

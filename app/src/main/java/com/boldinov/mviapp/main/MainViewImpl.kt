@@ -26,7 +26,7 @@ class MainViewImpl(
                     AlertDialog.Builder(root.context)
                         .setMessage("Loading...").show()
                 } else {
-                    dialog?.hide()
+                    dialog?.dismiss()
                     null
                 }
             }
@@ -44,6 +44,11 @@ class MainViewImpl(
         root.findViewById<View>(R.id.counter_decrease_button).apply {
             setOnClickListener {
                 dispatch(MainEvent.DecreaseClicked)
+            }
+        }
+        root.findViewById<View>(R.id.counter_share_button).apply {
+            setOnClickListener {
+                dispatch(MainEvent.ShareClicked)
             }
         }
     }

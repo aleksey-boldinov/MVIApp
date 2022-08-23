@@ -1,4 +1,4 @@
-package com.boldinov.mviapp.base
+package com.boldinov.mviapp.base.rx
 
 import com.arkivanov.mvikotlin.core.binder.Binder
 import io.reactivex.rxjava3.disposables.CompositeDisposable

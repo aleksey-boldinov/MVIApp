@@ -7,6 +7,17 @@
     android:padding="32dp"
     android:clipToPadding="false">
 
+    <Button
+        android:id="@+id/counter_share_button"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Поделиться"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="HardcodedText" />
+
     <TextView
         android:id="@+id/counter_text"
         android:layout_width="0dp"
@@ -16,6 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/counter_increase_button"
         tools:text="0" />
 
     <androidx.constraintlayout.widget.Guideline

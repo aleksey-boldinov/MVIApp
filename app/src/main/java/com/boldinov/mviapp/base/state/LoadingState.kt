@@ -1,4 +1,4 @@
-package com.boldinov.mviapp.base
+package com.boldinov.mviapp.base.state
 
 /**
  * Created by Aleksey Boldinov on 23.08.2022.

@@ -3,8 +3,8 @@ package com.boldinov.mviapp.counter
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.boldinov.mviapp.base.LoadingState
-import com.boldinov.mviapp.base.RxJavaExecutor
+import com.boldinov.mviapp.base.state.LoadingState
+import com.boldinov.mviapp.base.rx.RxJavaExecutor
 import com.boldinov.mviapp.counter.repository.CounterRepository
 import com.boldinov.mviapp.counter.repository.RandomCounterRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -65,6 +65,9 @@ class CounterStoreFactory(
                 }
                 is CounterStore.Intent.Decrease -> {
                     dispatch(Msg.Decreased(1))
+                }
+                is CounterStore.Intent.ShareCounter -> {
+                    publish(CounterStore.Label.ShareCounter(getState().counter))
                 }
             }
         }

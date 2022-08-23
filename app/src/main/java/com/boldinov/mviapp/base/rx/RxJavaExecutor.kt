@@ -1,4 +1,4 @@
-package com.boldinov.mviapp.base
+package com.boldinov.mviapp.base.rx
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.core.store.Bootstrapper

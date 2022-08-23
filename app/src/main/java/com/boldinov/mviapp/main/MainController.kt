@@ -6,10 +6,11 @@ import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
 import com.arkivanov.mvikotlin.core.binder.attachTo
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.boldinov.mviapp.base.RxJavaBinder
-import com.boldinov.mviapp.base.observableEvents
-import com.boldinov.mviapp.base.observableLabels
-import com.boldinov.mviapp.base.observableStates
+import com.boldinov.mviapp.base.rx.RxJavaBinder
+import com.boldinov.mviapp.base.rx.observableEvents
+import com.boldinov.mviapp.base.rx.observableLabels
+import com.boldinov.mviapp.base.rx.observableStates
+import com.boldinov.mviapp.counter.CounterRouter
 import com.boldinov.mviapp.counter.CounterStore
 import com.boldinov.mviapp.counter.CounterStoreFactory
 import com.boldinov.mviapp.main.mapper.MainViewModelMapper
@@ -19,6 +20,7 @@ import com.boldinov.mviapp.main.mapper.MainViewModelMapper
  */
 class MainController(
     private val storeFactory: StoreFactory,
+    private val counterRouter: CounterRouter,
     instanceKeeper: InstanceKeeper
 ) {
 
@@ -38,7 +40,9 @@ class MainController(
                     view.render(it)
                 }
             counterStore.observableLabels().subscribe {
-
+                if (it is CounterStore.Label.ShareCounter) {
+                    counterRouter.shareToApps(it.counter)
+                }
             }
         }.attachTo(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY)
     }
@@ -47,6 +51,7 @@ class MainController(
         return when (this) {
             MainEvent.IncreaseClicked -> CounterStore.Intent.Increase
             MainEvent.DecreaseClicked -> CounterStore.Intent.Decrease
+            MainEvent.ShareClicked -> CounterStore.Intent.ShareCounter
         }
     }
 

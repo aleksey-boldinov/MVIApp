@@ -8,4 +8,6 @@ sealed class MainEvent {
     object IncreaseClicked : MainEvent()
 
     object DecreaseClicked : MainEvent()
+
+    object ShareClicked : MainEvent()
 }

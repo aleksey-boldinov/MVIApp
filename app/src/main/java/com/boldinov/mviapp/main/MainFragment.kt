@@ -7,6 +7,8 @@ import com.arkivanov.essenty.instancekeeper.instanceKeeper
 import com.arkivanov.essenty.lifecycle.essentyLifecycle
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.boldinov.mviapp.R
+import com.boldinov.mviapp.base.router.WeakLifecycleNavigator
+import com.boldinov.mviapp.counter.CounterRouterImpl
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -17,10 +19,14 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private lateinit var controller: MainController
 
+    private val counterRouter = CounterRouterImpl()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        counterRouter.attachNavigator(WeakLifecycleNavigator(this))
         controller = MainController(
             DefaultStoreFactory(),
+            counterRouter,
             instanceKeeper()
         )
     }

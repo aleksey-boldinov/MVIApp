@@ -1,7 +1,7 @@
 package com.boldinov.mviapp.main.mapper
 
 import com.boldinov.mviapp.main.MainViewModel
-import com.boldinov.mviapp.base.LoadingState
+import com.boldinov.mviapp.base.state.LoadingState
 import com.boldinov.mviapp.counter.CounterStore
 
 /**
