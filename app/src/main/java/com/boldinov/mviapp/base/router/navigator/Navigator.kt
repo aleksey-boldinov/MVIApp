@@ -1,4 +1,4 @@
-package com.boldinov.mviapp.base.router
+package com.boldinov.mviapp.base.router.navigator
 
 import androidx.lifecycle.LifecycleOwner
 

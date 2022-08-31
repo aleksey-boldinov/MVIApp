@@ -8,8 +8,8 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.boldinov.mviapp.base.attachRxJavaBinder
-import com.boldinov.mviapp.base.router.WeakLifecycleNavigator
 import com.boldinov.mviapp.base.router.buffer.BufferStatePolicy
+import com.boldinov.mviapp.base.router.navigator.WeakLifecycleNavigator
 import com.boldinov.mviapp.base.rx.observableEvents
 import com.boldinov.mviapp.base.rx.observableLabels
 import com.boldinov.mviapp.base.rx.observableStates

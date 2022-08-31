@@ -1,4 +1,4 @@
-package com.boldinov.mviapp.base.router
+package com.boldinov.mviapp.base.router.navigator
 
 /**
  * Created by Aleksey Boldinov on 23.08.2022.
