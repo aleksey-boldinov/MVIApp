@@ -5,10 +5,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import com.arkivanov.essenty.lifecycle.asEssentyLifecycle
 import com.arkivanov.mvikotlin.core.binder.Binder
 import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
-import com.arkivanov.mvikotlin.core.binder.attachTo
 import com.boldinov.mviapp.base.rx.BinderContainer
 import com.boldinov.mviapp.base.rx.RxJavaBinder
 
@@ -41,7 +39,7 @@ inline fun <VIEW> Fragment.attachBinder(
             ) {
                 if (event == Lifecycle.Event.ON_CREATE) {
                     binder.invoke(viewFactory.invoke(requireView()))
-                        .attachTo(source.lifecycle.asEssentyLifecycle(), mode)
+                        .attachTo(source.lifecycle, mode)
                 } else if (event == Lifecycle.Event.ON_DESTROY) {
                     source.lifecycle.removeObserver(this)
                 }
@@ -49,3 +47,16 @@ inline fun <VIEW> Fragment.attachBinder(
         })
     }
 }
+
+fun Binder.attachTo(lifecycle: Lifecycle, mode: BinderLifecycleMode): Binder =
+    when (mode) {
+        BinderLifecycleMode.CREATE_DESTROY -> {
+            lifecycle.subscribe(onCreate = ::start, onDestroy = ::stop)
+        }
+        BinderLifecycleMode.START_STOP -> {
+            lifecycle.subscribe(onStart = ::start, onStop = ::stop)
+        }
+        BinderLifecycleMode.RESUME_PAUSE -> {
+            lifecycle.subscribe(onResume = ::start, onPause = ::stop)
+        }
+    }.let { this }
